@@ -41,6 +41,39 @@ To reproduce this architecture:
 4. **Compute:** Deploy the `lambda_function.py` script. Attach an IAM execution role with permissions for CloudWatch Logs and SNS. Store API keys in Lambda Environment Variables.
 5. **Trigger:** Create a CloudWatch Log Subscription filter to stream incoming honeypot events directly to the Lambda function.
 
+   ## 📸 Project Gallery & Proof of Concept
+
+### 1. The Result: Automated AI Threat Intelligence
+*The final output. An event-driven Lambda function parses the Cowrie logs, queries the Gemini 2.5 AI model, and routes the intelligence report to my email via Amazon SNS.*
+![AI Email Alert](Honeypot_Email_Alert.png)
+
+---
+
+### 2. The Attack: Live Payload Interception
+*The attacker's perspective. The honeypot successfully captures a live `wget` command attempting to download a cryptominer payload before disconnecting the session.*
+![Attacker Terminal](Test.png)
+
+---
+
+### 3. The Backend: Infrastructure & Telemetry Configuration
+*A look under the hood at the AWS and Linux engineering required to build the automated pipeline.*
+
+**Step A: IAM Security Role Configuration**
+*Applying the principle of least privilege to allow the EC2 instance to securely publish logs to CloudWatch.*
+![IAM Role](HoneyPot.png)
+
+**Step B: CloudWatch Agent Installation**
+*Installing the unified telemetry agent on the Amazon Linux 2023 server.*
+![Agent Install](CloudWatch_Agent.png)
+
+**Step C: Telemetry Routing (JSON Configuration)**
+*Writing the custom `cloudwatch-config.json` file to map the raw `/home/cowrie/cowrie/var/log/cowrie/cowrie.json` file to the AWS Cloud.*
+![JSON Config](JSON.png)
+
+**Step D: Event Trigger & Pipeline Verification**
+*Verifying the logs successfully stream into the CloudWatch Log Group and trigger the Lambda Subscription Filter.*
+![CloudWatch Dashboard](Cowrie.png)
+
    ## 🔮 Future Enhancements
 - **DynamoDB Integration:** Store attacker IPs and malware hashes in a NoSQL database to build a long-term threat intelligence feed.
 - **Automated Blocking:** Integrate Lambda with AWS WAF or EC2 Network ACLs to automatically block IPs that the AI flags as highly malicious.
