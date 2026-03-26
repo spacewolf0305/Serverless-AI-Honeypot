@@ -33,3 +33,15 @@ During a live-fire test, the honeypot captured the following automated attack ve
 - **Linux System Administration:** Service management (`systemd`), user privilege separation, network routing (`iptables`).
 - **Event-Driven Architecture:** Serverless compute orchestration (Lambda), CloudWatch Event Routing.
 - **Threat Intelligence:** Automated JSON log parsing, API integration, and malware intent analysis.
+- ## 🛠️ Deployment Summary
+To reproduce this architecture:
+1. **Infrastructure:** Provision an Amazon Linux 2023 EC2 instance. Configure Security Groups to allow inbound TCP on ports 22 (SSH) and 2222 (Cowrie).
+2. **Honeypot:** Install Cowrie. Use `iptables` to route traffic from Port 22 to 2222 to capture automated scanners without running Cowrie as root.
+3. **Telemetry:** Install the unified CloudWatch Agent to monitor `/home/cowrie/cowrie/var/log/cowrie/cowrie.json`.
+4. **Compute:** Deploy the `lambda_function.py` script. Attach an IAM execution role with permissions for CloudWatch Logs and SNS. Store API keys in Lambda Environment Variables.
+5. **Trigger:** Create a CloudWatch Log Subscription filter to stream incoming honeypot events directly to the Lambda function.
+
+   ## 🔮 Future Enhancements
+- **DynamoDB Integration:** Store attacker IPs and malware hashes in a NoSQL database to build a long-term threat intelligence feed.
+- **Automated Blocking:** Integrate Lambda with AWS WAF or EC2 Network ACLs to automatically block IPs that the AI flags as highly malicious.
+- **Dashboarding:** Connect the CloudWatch logs to Amazon OpenSearch or Grafana for real-time visual geographic tracking of attackers.
